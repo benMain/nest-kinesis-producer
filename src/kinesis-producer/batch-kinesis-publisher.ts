@@ -39,8 +39,7 @@ export class BatchKinesisPublisher {
       StreamName: this.streamName,
       Records: this.entries,
     };
-    const promise = this.kinesis.putRecords(putRecordsInput).promise();
-    const result = await promise;
+    await this.kinesis.putRecords(putRecordsInput).promise();
     this.entries = [];
   }
 

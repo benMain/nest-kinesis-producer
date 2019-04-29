@@ -92,10 +92,10 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
             throw ex;
         }
         await this.sleep();
-        const timeout = (this.backoff = Math.min(
+        this.backoff = Math.min(
             RetryingBatchKinesisPublisher.MAX_BACKOFF,
             this.backoff * 2,
-        ));
+        );
         this.attempt++;
         await this.flush();
     }
