@@ -33,16 +33,6 @@ describe('RetryingBatchKinesisPublisher', () => {
   it('should be defined', () => {
     expect(provider).toBeDefined();
   });
-  it('putRecords(): should put records', async () => {
-    const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const mockResponse: Request<
-      PutRecordsOutput,
-      AWSError
-    > = testSupport.generatePutRecordsRequest(true);
-    putRecordsMock.mockImplementation(() => mockResponse);
-    await provider.putRecords('fake', [record]);
-    expect(putRecordsMock).toHaveBeenCalledTimes(1);
-  });
   it('putRecords(): should retry on retryable failure', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
     const failedResponse: Request<
@@ -72,5 +62,15 @@ describe('RetryingBatchKinesisPublisher', () => {
     putRecordsMock.mockImplementationOnce(() => successfulResponse);
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(2);
+  });
+  it('putRecords(): should put records', async () => {
+    const record: KinesisEvent = testSupport.generateKinesisEvent();
+    const mockResponse: Request<
+      PutRecordsOutput,
+      AWSError
+    > = testSupport.generatePutRecordsRequest(true);
+    putRecordsMock.mockImplementation(() => mockResponse);
+    await provider.putRecords('fake', [record]);
+    expect(putRecordsMock).toHaveBeenCalledTimes(1);
   });
 });
