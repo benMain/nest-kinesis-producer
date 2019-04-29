@@ -12,17 +12,12 @@ An effficient <a href="https://docs.nestjs.com/" target="blank">Nest.js</a> Kine
 $ npm install nest-kinesis-producer
 ```
 
-## Running the app
+## Adding the Global Module
+Add the Kinesis Producer to your App Module. It will register globally.
 
-```bash
-# development
-$ npm run start
+```node
+KinesisProducerModule.forRoot()
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 ## Support
 
