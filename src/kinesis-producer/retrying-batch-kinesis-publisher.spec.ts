@@ -71,6 +71,6 @@ describe('RetryingBatchKinesisPublisher', () => {
     putRecordsMock.mockImplementationOnce(() => retryableResponse);
     putRecordsMock.mockImplementationOnce(() => successfulResponse);
     await provider.putRecords('fake', [record]);
-    expect(putRecordsMock).toHaveBeenCalledTimes(1);
+    expect(putRecordsMock).toHaveBeenCalledTimes(2);
   });
 });
