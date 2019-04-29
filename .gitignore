@@ -1,0 +1,56 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# build artifacts
+/artifacts
+cfn/ods-datalake-api.zip
+cfn/ods-datalake-api-cfn-transform.yaml
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+.vscode
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+/.vscode
+.vscode/*
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+jest.json
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Mock API
+/api/node_modules
+cfn/*transform.yaml
+cfn/*.zip
