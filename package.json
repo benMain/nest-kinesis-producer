@@ -51,6 +51,9 @@
   "publishConfig": {
     "registry": "https://nexus.services.aws.lumeris.com:8443/repository/npm_private/"
   },
+  "files": [
+    "dist/**"
+  ],
   "repository": "https://github.com/benMain/nest-kinesis-producer",
   "jest": {
     "moduleFileExtensions": [
