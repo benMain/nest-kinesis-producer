@@ -29,6 +29,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     if (this.entries.length < 1) {
       return;
     }
+    this.logger.log(`Attempting to flush ${this.entries.length} records!`);
 
     const putRecordsInput: PutRecordsInput = {
       StreamName: this.streamName,
@@ -42,7 +43,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     } catch (err) {
       this.logger.error(
         `Caught exception in flush | attempts: ${this.attempt}, backoff: ${
-          this.backoff
+        this.backoff
         }, message: ${err}`,
       );
       await this.handleException(err);
@@ -76,6 +77,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     const retries = potentialRetries.filter(x => x !== null);
     this.entries = [];
     if (retries.length > 0) {
+      this.logger.warn(`There were ${retries.length} records requiring retry.`);
       for (const x of retries) {
         await this.addEntry(x);
       }
