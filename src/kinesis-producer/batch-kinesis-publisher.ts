@@ -18,6 +18,11 @@ export class BatchKinesisPublisher {
   }
 
   async putRecords(streamName: string, events: KinesisEvent[]): Promise<void> {
+    this.baseLogger.log(
+      `putRecords() invoked for ${
+        events.length
+      } records on stream ${streamName}`,
+    );
     this.streamName = streamName;
     for (const x of events) {
       await this.addEntry({
@@ -26,6 +31,7 @@ export class BatchKinesisPublisher {
       });
     }
     await this.flush();
+    this.baseLogger.log(`putRecords() completed for ${events.length} records`);
   }
   protected getDataBytes(data: string): Buffer {
     return Buffer.from(data, 'utf8');

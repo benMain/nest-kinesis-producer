@@ -43,7 +43,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     } catch (err) {
       this.logger.error(
         `Caught exception in flush | attempts: ${this.attempt}, backoff: ${
-        this.backoff
+          this.backoff
         }, message: ${err}`,
       );
       await this.handleException(err);
@@ -90,9 +90,14 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       this.attempt >= RetryingBatchKinesisPublisher.MAX_ATTEMPTS ||
       ex.statusCode / 100 === 4
     ) {
+      this.logger.error(ex.message, 'Unhandleable client error!');
       this.reset();
       throw ex;
     }
+    this.logger.warn(
+      `Managable client error, sleeping for ${this.backoff / 1000} seconds`,
+      ex.message,
+    );
     await this.sleep();
     this.backoff = Math.min(
       RetryingBatchKinesisPublisher.MAX_BACKOFF,
