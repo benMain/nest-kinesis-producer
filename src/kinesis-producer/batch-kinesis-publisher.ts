@@ -29,7 +29,9 @@ export class BatchKinesisPublisher {
         PartitionKey: x.PartitionKey,
       };
       this.baseLogger.log(
-        `Writing blob record Data: ${request.Data.toString()}`,
+        `Writing blob record of size ${
+          request.Data.toString('utf8').length
+        } Data: ${request.Data.toString('utf8')}`,
       );
       await this.addEntry(request);
     }
@@ -55,8 +57,8 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
-    const entryDataSize =
-      entry.Data.toString('utf8').length + entry.PartitionKey.length;
+    const entryDataSize: number =
+      Buffer.byteLength(entry.Data as Buffer) + entry.PartitionKey.length;
     this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
     if (entryDataSize > BatchKinesisPublisher.ONE_MEG) {
       this.baseLogger.error(
