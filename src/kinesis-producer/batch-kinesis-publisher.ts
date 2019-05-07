@@ -68,9 +68,13 @@ export class BatchKinesisPublisher {
 
     const newDataSize = this.dataSize + entryDataSize;
     if (newDataSize <= 5 * 1024 * 1024 && this.entries.length < 500) {
+      this.baseLogger.log(`Adding an entry without flush!`);
       this.dataSize = newDataSize;
       this.entries.push(entry);
     } else {
+      this.baseLogger.log(
+        `Flushing because of full bag of ${this.entries.length} records`,
+      );
       await this.flush();
       this.dataSize = 0;
       await this.addEntry(entry);
