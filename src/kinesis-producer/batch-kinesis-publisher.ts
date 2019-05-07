@@ -49,15 +49,17 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
-    if (!entry.PartitionKey) {
-      this.baseLogger.error(
-        `Missing PartitionKey for data ${entry.Data.toString('utf8')}`,
-      );
-      return;
-    }
     const entryDataSize: number =
       entry.Data.toString('utf8').length + entry.PartitionKey.length;
     this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
+    if (Number.isNaN(entryDataSize)) {
+      this.baseLogger.error(
+        `Cannot produce data size of partitionKey: ${
+        entry.PartitionKey
+        }  |  Data: ${entry.Data.toString('utf8')}`,
+      );
+      return;
+    }
     if (entryDataSize > BatchKinesisPublisher.ONE_MEG) {
       this.baseLogger.error(
         `FATAL: entry exceeds maximum size of 1M and
