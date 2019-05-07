@@ -56,7 +56,7 @@ export class BatchKinesisPublisher {
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
     const entryDataSize =
-      entry.Data.toString().length + entry.PartitionKey.length;
+      entry.Data.toString('utf8').length + entry.PartitionKey.length;
     this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
     if (entryDataSize > BatchKinesisPublisher.ONE_MEG) {
       this.baseLogger.error(
