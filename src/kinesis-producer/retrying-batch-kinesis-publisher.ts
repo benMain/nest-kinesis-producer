@@ -52,9 +52,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     const intArray = Array.from(Array(result.Records.length).keys());
     const potentialRetries = intArray.map(i => {
       const entry = this.entries[i];
-      const stringifiedEntry = JSON.stringify(entry);
       const errorCode = result.Records[i].ErrorCode;
-      const recordRetries = this.recordAttempts[stringifiedEntry];
+      const recordRetries = this.recordAttempts[entry.PartitionKey];
       let retryCount: number = 1;
       if (recordRetries) {
         retryCount += recordRetries;
@@ -67,10 +66,10 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
         ) &&
         retryCount < RetryingBatchKinesisPublisher.MAX_ATTEMPTS
       ) {
-        this.recordAttempts[stringifiedEntry] = retryCount;
+        this.recordAttempts[entry.PartitionKey] = retryCount;
         return entry;
       } else {
-        this.recordAttempts[stringifiedEntry] = 0;
+        this.recordAttempts[entry.PartitionKey] = 0;
         return null;
       }
     });
@@ -81,7 +80,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       for (const x of retries) {
         await this.addEntry(x);
       }
-      this.flush();
+      await this.flush();
     }
   }
 
