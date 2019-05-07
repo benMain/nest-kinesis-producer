@@ -6,7 +6,7 @@ import { PromiseResult } from 'aws-sdk/lib/request';
 export class TestSupport {
   public generateKinesisEvent(): KinesisEvent {
     return {
-      Data: 'Ben is Awesome',
+      Data: JSON.stringify({ Ben: 'Is Awesome!' }),
       PartitionKey: '1',
     };
   }

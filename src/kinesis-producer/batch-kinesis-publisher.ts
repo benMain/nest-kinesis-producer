@@ -24,18 +24,11 @@ export class BatchKinesisPublisher {
     );
     this.streamName = streamName;
     for (const x of events) {
-      const request: PutRecordsRequestEntry = {
+      await this.addEntry({
         Data: this.getDataBytes(x.Data),
         PartitionKey: x.PartitionKey,
-      };
-      this.baseLogger.log(
-        `Writing blob record of size ${
-          request.Data.toString('utf8').length
-        } Data: ${request.Data.toString('utf8')}`,
-      );
-      await this.addEntry(request);
+      });
     }
-    this.baseLogger.log(`putRecords() preparing to flush!`);
     await this.flush();
     this.baseLogger.log(`putRecords() completed for ${events.length} records`);
   }
@@ -47,7 +40,6 @@ export class BatchKinesisPublisher {
     if (this.entries.length < 1) {
       return;
     }
-    this.baseLogger.warn('Should never get here!');
     const putRecordsInput: PutRecordsInput = {
       StreamName: this.streamName,
       Records: this.entries,
@@ -57,8 +49,14 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
+    if (!entry.PartitionKey) {
+      this.baseLogger.error(
+        `Missing PartitionKey for data ${entry.Data.toString('utf8')}`,
+      );
+      return;
+    }
     const entryDataSize: number =
-      Buffer.byteLength(entry.Data as Buffer) + entry.PartitionKey.length;
+      entry.Data.toString('utf8').length + entry.PartitionKey.length;
     this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
     if (entryDataSize > BatchKinesisPublisher.ONE_MEG) {
       this.baseLogger.error(
@@ -70,13 +68,9 @@ export class BatchKinesisPublisher {
 
     const newDataSize = this.dataSize + entryDataSize;
     if (newDataSize <= 5 * 1024 * 1024 && this.entries.length < 500) {
-      this.baseLogger.log(`Adding an entry without flush!`);
       this.dataSize = newDataSize;
       this.entries.push(entry);
     } else {
-      this.baseLogger.log(
-        `Flushing because of full bag of ${this.entries.length} records`,
-      );
       await this.flush();
       this.dataSize = 0;
       await this.addEntry(entry);
