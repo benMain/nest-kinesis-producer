@@ -19,17 +19,21 @@ export class BatchKinesisPublisher {
 
   async putRecords(streamName: string, events: KinesisEvent[]): Promise<void> {
     this.baseLogger.log(
-      `putRecords() invoked for ${
-        events.length
-      } records on stream ${streamName}`,
+      `putRecords() invoked for ${events.length}
+       records on stream ${streamName}`,
     );
     this.streamName = streamName;
     for (const x of events) {
-      await this.addEntry({
+      const request: PutRecordsRequestEntry = {
         Data: this.getDataBytes(x.Data),
         PartitionKey: x.PartitionKey,
-      });
+      };
+      this.baseLogger.log(
+        `Writing blob record Data: ${request.Data.toString()}`,
+      );
+      await this.addEntry(request);
     }
+    this.baseLogger.log(`putRecords() preparing to flush!`);
     await this.flush();
     this.baseLogger.log(`putRecords() completed for ${events.length} records`);
   }
@@ -41,6 +45,7 @@ export class BatchKinesisPublisher {
     if (this.entries.length < 1) {
       return;
     }
+    this.baseLogger.warn('Should never get here!');
     const putRecordsInput: PutRecordsInput = {
       StreamName: this.streamName,
       Records: this.entries,
@@ -52,7 +57,7 @@ export class BatchKinesisPublisher {
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
     const entryDataSize =
       entry.Data.toString().length + entry.PartitionKey.length;
-
+    this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
     if (entryDataSize > BatchKinesisPublisher.ONE_MEG) {
       this.baseLogger.error(
         `FATAL: entry exceeds maximum size of 1M and
