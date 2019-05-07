@@ -90,7 +90,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       this.attempt >= RetryingBatchKinesisPublisher.MAX_ATTEMPTS ||
       ex.statusCode / 100 === 4
     ) {
-      this.logger.error(ex.message, 'Unhandleable client error!');
+      this.logger.error(`Unhandleable client error! ${ex.message}`);
       this.reset();
       throw ex;
     }
