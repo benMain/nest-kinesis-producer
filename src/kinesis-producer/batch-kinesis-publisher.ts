@@ -49,14 +49,13 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
-    const stringPayload: string = JSON.stringify(entry.Data.toString('utf8'));
-    const entryDataSize: number = stringPayload.length;
-    this.baseLogger.log(`Attempting to add record of size ${entryDataSize}`);
+    const entryDataSize: number = entry.Data.toString('utf8').length
+      + entry.PartitionKey.toString().length;
     if (Number.isNaN(entryDataSize)) {
       this.baseLogger.error(
         `Cannot produce data size of partitionKey: ${
-          entry.PartitionKey
-        }  |  Data: ${stringPayload}`,
+        entry.PartitionKey
+        }  |  Data: ${entry.Data.toString('utf8')}`,
       );
       return;
     }
