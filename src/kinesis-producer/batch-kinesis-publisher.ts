@@ -26,7 +26,7 @@ export class BatchKinesisPublisher {
     for (const x of events) {
       await this.addEntry({
         Data: this.getDataBytes(x.Data),
-        PartitionKey: x.PartitionKey,
+        PartitionKey: x.PartitionKey.toString(),
       });
     }
     await this.flush();
@@ -50,7 +50,7 @@ export class BatchKinesisPublisher {
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
     const entryDataSize: number = entry.Data.toString('utf8').length
-      + entry.PartitionKey.toString().length;
+      + entry.PartitionKey.length;
     if (Number.isNaN(entryDataSize)) {
       this.baseLogger.error(
         `Cannot produce data size of partitionKey: ${
