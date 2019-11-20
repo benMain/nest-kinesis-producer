@@ -49,12 +49,12 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
-    const entryDataSize: number = entry.Data.toString('utf8').length
-      + entry.PartitionKey.length;
+    const entryDataSize: number =
+      entry.Data.toString('utf8').length + entry.PartitionKey.length;
     if (Number.isNaN(entryDataSize)) {
       this.baseLogger.error(
         `Cannot produce data size of partitionKey: ${
-        entry.PartitionKey
+          entry.PartitionKey
         }  |  Data: ${entry.Data.toString('utf8')}`,
       );
       return;
