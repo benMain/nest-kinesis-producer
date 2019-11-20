@@ -7,11 +7,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-    "fastify",
-    "serverless",
-    "lambda",
-    "aws",
-    "proxy"
+    "nest",
+    "kinesis",
+    "publish",
+    "producer"
   ],
   "homepage": "https://github.com/benMain/nest-kinesis-producer",
   "bugs": {
