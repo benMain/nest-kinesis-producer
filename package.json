@@ -1,6 +1,6 @@
 {
   "name": "nest-kinesis-producer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Efficient Node Kinesis Producer Based on Kevin Deng's AWS Big Data Blog",
   "author": "Benjamin Main",
   "license": "MIT",
