@@ -13,22 +13,48 @@ $ npm install nest-kinesis-producer
 ```
 
 ## Adding the Global Module
-Add the Kinesis Producer to your App Module. It will register globally.
 
-```node
-KinesisProducerModule.forRoot()
+Add the Kinesis Producer to your App Module imports. It will register globally.
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [KinesisProducerModule.forRoot(new Kinesis())],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+### Use the Publisher
+
+```typescript
+import { hash } from 'crypto';
+export class AppService {
+  constructor(private readonly kinesisPublisher: RetryingBatchKinesisPublisher){}
+
+  public async sendToKinesis(messages: string[]): Promise<void> {
+    const events = messages.map(x => new KinesisEvent(this.getPartitionKey(x), x));
+    await this.kinesisPublisher.putRecords('fakeStreamName', events);
+  }
+
+  public getPartitionKey(mesage: string): string {
+    ...
+  }
+}
 
 ```
+
 ## Support
 
-
+Pull requests are welcome. Please remember that commits must be made using Angular [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular)
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Benjamin Main](mailto::bam036036@gmail.com)
+- Twitter - [@Ben05920582](https://twitter.com/https://twitter.com/Ben05920582)
 
 ## License
 
-  Nest is [MIT licensed](LICENSE).
+Nest-Kinesis-Producer is [MIT licensed](LICENSE).
