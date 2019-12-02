@@ -1,8 +1,9 @@
-import { Logger, Injectable } from '@nestjs/common';
+import { AWSError, Kinesis } from 'aws-sdk';
+import { Injectable, Logger } from '@nestjs/common';
+
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
-import { Kinesis, AWSError } from 'aws-sdk';
-import { PutRecordsInput } from 'aws-sdk/clients/kinesis';
 import { PromiseResult } from 'aws-sdk/lib/request';
+import { PutRecordsInput } from 'aws-sdk/clients/kinesis';
 
 @Injectable()
 export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
