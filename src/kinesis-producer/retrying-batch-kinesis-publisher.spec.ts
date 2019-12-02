@@ -1,5 +1,6 @@
+import { AWSError, Kinesis, Request } from 'aws-sdk';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Kinesis, AWSError, Request } from 'aws-sdk';
+
 import { KinesisEvent } from './kinesis-event.interface';
 import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';

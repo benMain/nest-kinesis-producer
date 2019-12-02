@@ -1,7 +1,8 @@
-import { Kinesis, AWSError, Request } from 'aws-sdk';
+import { AWSError, Kinesis, Request } from 'aws-sdk';
+
 import { KinesisEvent } from './kinesis-event.interface';
-import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
 import { PromiseResult } from 'aws-sdk/lib/request';
+import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
 
 export class TestSupport {
   public generateKinesisEvent(): KinesisEvent {

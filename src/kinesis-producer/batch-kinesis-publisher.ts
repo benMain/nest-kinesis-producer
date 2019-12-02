@@ -1,9 +1,10 @@
-import { Logger, Injectable } from '@nestjs/common';
-import { Kinesis } from 'aws-sdk';
+import { Injectable, Logger } from '@nestjs/common';
 import {
-  PutRecordsRequestEntry,
   PutRecordsInput,
+  PutRecordsRequestEntry,
 } from 'aws-sdk/clients/kinesis';
+
+import { Kinesis } from 'aws-sdk';
 import { KinesisEvent } from './kinesis-event.interface';
 
 @Injectable()

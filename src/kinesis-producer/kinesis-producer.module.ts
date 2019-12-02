@@ -1,7 +1,8 @@
-import { Module, Global, DynamicModule } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
+
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
-import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
 import { Kinesis } from 'aws-sdk';
+import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
 
 @Global()
 @Module({})
