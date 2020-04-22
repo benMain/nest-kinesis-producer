@@ -40,7 +40,7 @@ export class TestSupport {
 }
 
 const goodPromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>(resolve =>
+  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
     resolve({
       Records: [{ ShardId: '1' }],
       $response: null,
@@ -56,7 +56,7 @@ const failPromise = () =>
   );
 
 const retryablePromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>(resolve =>
+  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
     resolve({
       Records: [
         { ShardId: '1', ErrorCode: 'ProvisionedThroughputExceededException' },
