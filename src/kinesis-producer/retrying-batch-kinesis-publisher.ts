@@ -43,7 +43,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       const entry = this.entries[i];
       const errorCode = result.Records[i].ErrorCode;
       // Determine whether the record should be retried
-      if (!!errorCode) this.logger.warn(`Kinesis ErrorCode: ${errorCode} ${JSON.stringify(result.Records[i].ErrorMessage)}`);
+      if (!!errorCode)
+        this.logger.warn(`Kinesis ErrorCode: ${errorCode} ${JSON.stringify(result.Records[i].ErrorMessage)}`);
       if (!!errorCode && RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some((x) => x === errorCode)) {
         return entry;
       } else {
