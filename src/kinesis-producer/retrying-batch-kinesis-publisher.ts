@@ -39,22 +39,18 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       return;
     }
     const intArray = Array.from(Array(result.Records.length).keys());
-    const potentialRetries = intArray.map(i => {
+    const potentialRetries = intArray.map((i) => {
       const entry = this.entries[i];
       const errorCode = result.Records[i].ErrorCode;
       // Determine whether the record should be retried
-      if (
-        !!errorCode &&
-        RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some(
-          x => x === errorCode,
-        )
-      ) {
+      if (!!errorCode) this.logger.warn(`Kinesis ErrorCode: ${errorCode} ${JSON.stringify(result.Records[i].ErrorMessage)}`);
+      if (!!errorCode && RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some((x) => x === errorCode)) {
         return entry;
       } else {
         return null;
       }
     });
-    const retries = potentialRetries.filter(x => !!x);
+    const retries = potentialRetries.filter((x) => !!x);
     this.entries = [];
     if (retries.length > 0) {
       await this.sleep();
@@ -77,9 +73,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
 
   private sleep(): Promise<void> {
     const sleepTime = Math.floor(Math.random() * 2000);
-    this.logger.warn(
-      `Managable client issue, sleeping for ${sleepTime / 1000} seconds`,
-    );
-    return new Promise(resolve => setTimeout(resolve, sleepTime));
+    this.logger.warn(`Managable client issue, sleeping for ${sleepTime / 1000} seconds`);
+    return new Promise((resolve) => setTimeout(resolve, sleepTime));
   }
 }

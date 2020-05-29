@@ -12,9 +12,7 @@ export class TestSupport {
     };
   }
 
-  public generatePutRecordsRequest(
-    isGood: boolean,
-  ): Request<PutRecordsOutput, AWSError> {
+  public generatePutRecordsRequest(isGood: boolean): Request<PutRecordsOutput, AWSError> {
     return {
       abort: null,
       createReadStream: null,
@@ -29,10 +27,7 @@ export class TestSupport {
     };
   }
 
-  public generatePutRecordsRequestIndividualFailure(): Request<
-    PutRecordsOutput,
-    AWSError
-  > {
+  public generatePutRecordsRequestIndividualFailure(): Request<PutRecordsOutput, AWSError> {
     const request = this.generatePutRecordsRequest(true);
     request.promise = retryablePromise;
     return request;
@@ -40,7 +35,7 @@ export class TestSupport {
 }
 
 const goodPromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>(resolve =>
+  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
     resolve({
       Records: [{ ShardId: '1' }],
       $response: null,
@@ -56,11 +51,9 @@ const failPromise = () =>
   );
 
 const retryablePromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>(resolve =>
+  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
     resolve({
-      Records: [
-        { ShardId: '1', ErrorCode: 'ProvisionedThroughputExceededException' },
-      ],
+      Records: [{ ShardId: '1', ErrorCode: 'ProvisionedThroughputExceededException' }],
       $response: null,
     }),
   );
