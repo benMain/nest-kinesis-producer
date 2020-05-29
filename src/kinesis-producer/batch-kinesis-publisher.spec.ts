@@ -32,10 +32,7 @@ describe('BatchKinesisPublisher', () => {
   });
   it('putRecords(): should put records', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const mockResponse: Request<
-      PutRecordsOutput,
-      AWSError
-    > = testSupport.generatePutRecordsRequest(true);
+    const mockResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementation(() => mockResponse);
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(1);

@@ -43,12 +43,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       const entry = this.entries[i];
       const errorCode = result.Records[i].ErrorCode;
       // Determine whether the record should be retried
-      if (
-        !!errorCode &&
-        RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some(
-          (x) => x === errorCode,
-        )
-      ) {
+      if (!!errorCode) this.logger.warn(`Kinesis ErrorCode: ${errorCode} ${JSON.stringify(result.Records[i].ErrorMessage)}`);
+      if (!!errorCode && RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some((x) => x === errorCode)) {
         return entry;
       } else {
         return null;
@@ -77,9 +73,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
 
   private sleep(): Promise<void> {
     const sleepTime = Math.floor(Math.random() * 2000);
-    this.logger.warn(
-      `Managable client issue, sleeping for ${sleepTime / 1000} seconds`,
-    );
+    this.logger.warn(`Managable client issue, sleeping for ${sleepTime / 1000} seconds`);
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
   }
 }
