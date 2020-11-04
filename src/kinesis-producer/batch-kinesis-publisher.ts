@@ -10,7 +10,7 @@ export class BatchKinesisPublisher {
   private static readonly ONE_MEG = 1024 * 1024;
   protected entries: PutRecordsRequestEntry[] = [];
   protected streamName: string;
-  private dataSize: number = 0;
+  private dataSize = 0;
   constructor(protected readonly kinesis: Kinesis) {
     this.baseLogger = new Logger(BatchKinesisPublisher.name);
   }

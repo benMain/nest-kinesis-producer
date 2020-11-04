@@ -17,8 +17,8 @@ $ npm install nest-kinesis-producer
 Add the Kinesis Producer to your App Module imports. It will register globally.
 
 ```typescript
-import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [KinesisProducerModule.forRoot(new Kinesis())],
@@ -31,11 +31,19 @@ export class AppModule {}
 
 ```typescript
 import { hash } from 'crypto';
+import { RetryingBatchKinesisPublisher } from "nest-kinesis-producer";
+
+
 export class AppService {
   constructor(private readonly kinesisPublisher: RetryingBatchKinesisPublisher){}
 
   public async sendToKinesis(messages: string[]): Promise<void> {
-    const events = messages.map(x => new KinesisEvent(this.getPartitionKey(x), x));
+    const events = messages.map((x) => {
+      return {
+        PartitionKey: this.getPartitionKey(x),
+        Data: x
+      };
+    });
     await this.kinesisPublisher.putRecords('fakeStreamName', events);
   }
 
