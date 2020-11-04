@@ -1,1 +1,1 @@
-export * from './kinesis-producer'
+export * from './kinesis-producer';

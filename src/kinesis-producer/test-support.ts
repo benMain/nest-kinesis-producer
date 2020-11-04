@@ -1,4 +1,4 @@
-import { AWSError, Kinesis, Request } from 'aws-sdk';
+import { AWSError, Request } from 'aws-sdk';
 
 import { KinesisEvent } from './kinesis-event.interface';
 import { PromiseResult } from 'aws-sdk/lib/request';
