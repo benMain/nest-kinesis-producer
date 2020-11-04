@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.0.2...v2.1.0) (2020-11-04)
+
+
+### Bug Fixes
+
+* **barrelling:** fix the barrelling of files ([e385c6e](https://github.com/benMain/nest-kinesis-producer/commit/e385c6ea592bdbfd68c33c3b7fd7d04080fac6fd))
+
+
+### Features
+
+* **barrelling:** fix the barreling of files ([6f475c0](https://github.com/benMain/nest-kinesis-producer/commit/6f475c051b2c8f2be89a2b1c1373de05dd85c00c))
+
 ## [2.0.2](https://github.com/benMain/nest-kinesis-producer/compare/v2.0.1...v2.0.2) (2020-11-04)
 
 ## [2.0.1](https://github.com/benMain/nest-kinesis-producer/compare/v2.0.0...v2.0.1) (2020-10-05)
