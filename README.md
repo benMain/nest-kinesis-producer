@@ -31,6 +31,9 @@ export class AppModule {}
 
 ```typescript
 import { hash } from 'crypto';
+import { RetryingBatchKinesisPublisher } from "nest-kinesis-producer";
+
+
 export class AppService {
   constructor(private readonly kinesisPublisher: RetryingBatchKinesisPublisher){}
 
