@@ -1,3 +1,4 @@
+import { AsyncProvider, ImportableFactoryProvider } from './async-types';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
@@ -20,5 +21,39 @@ export class KinesisProducerModule {
       ],
       exports: [RetryingBatchKinesisPublisher],
     };
+  }
+
+  static forRootAsync(kinesisProvider: AsyncProvider<Kinesis | Promise<Kinesis>>) {
+    const module: DynamicModule = {
+      global: true,
+      module: KinesisProducerModule,
+      imports: [],
+      providers: [BatchKinesisPublisher, RetryingBatchKinesisPublisher],
+      exports: [RetryingBatchKinesisPublisher],
+    };
+    this.addAsyncProvider(module, Kinesis, kinesisProvider, false);
+    return module;
+  }
+
+  private static addAsyncProvider<T>(
+    module: DynamicModule,
+    provide: string | (new () => T),
+    asyncProvider: AsyncProvider<T | Promise<T>>,
+    exportable: boolean,
+  ) {
+    const imports = (asyncProvider as ImportableFactoryProvider<T>).imports;
+    if (imports?.length) {
+      imports.forEach((i) => module.imports.push(i));
+    }
+    delete (asyncProvider as ImportableFactoryProvider<T>).imports;
+
+    module.providers.push({
+      ...asyncProvider,
+      provide,
+    });
+
+    if (exportable) {
+      module.exports.push(provide);
+    }
   }
 }
