@@ -1,9 +1,9 @@
+import { AsyncProvider, ImportableFactoryProvider } from './async-types';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
 import { Kinesis } from 'aws-sdk';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
-import { AsyncProvider, ImportableFactoryProvider } from './async-types';
 
 @Global()
 @Module({})
@@ -28,14 +28,11 @@ export class KinesisProducerModule {
       global: true,
       module: KinesisProducerModule,
       imports: [],
-      providers: [
-        BatchKinesisPublisher,
-        RetryingBatchKinesisPublisher,
-      ],
+      providers: [BatchKinesisPublisher, RetryingBatchKinesisPublisher],
       exports: [RetryingBatchKinesisPublisher],
     };
     this.addAsyncProvider(module, Kinesis, kinesisProvider, false);
-    return module
+    return module;
   }
 
   private static addAsyncProvider<T>(

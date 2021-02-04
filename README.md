@@ -16,12 +16,35 @@ $ npm install nest-kinesis-producer
 
 Add the Kinesis Producer to your App Module imports. It will register globally.
 
+#### Syncronously:
+
 ```typescript
 import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
 
 @Module({
   imports: [KinesisProducerModule.forRoot(new Kinesis())],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+#### Asyncronously:
+
+```typescript
+import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [
+      KinesisProducerModule.forRootAsync({
+        useFactory: (cfg: ConfigService) => new Kinesis({credentials: cfg.getCreds()}),
+        inject: [ConfigService],
+        imports: [ConfigModule],
+      }),
+    ),
+  ],
   providers: [AppService],
 })
 export class AppModule {}
