@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.1.1...v2.2.0) (2021-02-04)
+
+
+### Features
+
+* **ForRootAsync:** Add forRootAsync static method to provide flexibility. ([f7bdc57](https://github.com/benMain/nest-kinesis-producer/commit/f7bdc5745b4697f3112e9ea2c775cae2ab1a12c5))
+
 ## [2.1.1](https://github.com/benMain/nest-kinesis-producer/compare/v2.1.0...v2.1.1) (2021-01-14)
 
 # [2.1.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.0.2...v2.1.0) (2020-11-04)
