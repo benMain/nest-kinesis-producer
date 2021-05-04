@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.2.1...v2.3.0) (2021-05-04)
+
+
+### Features
+
+* **Dependencies:** Move dependencies to transitive dependencies to prune size. ([622b053](https://github.com/benMain/nest-kinesis-producer/commit/622b053afcd9cfd3f19c402cf1ecd1a3fe60e1f1))
+
 ## [2.2.1](https://github.com/benMain/nest-kinesis-producer/compare/v2.2.0...v2.2.1) (2021-05-04)
 
 # [2.2.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.1.1...v2.2.0) (2021-02-04)
