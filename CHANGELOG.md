@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.3.0...v2.4.0) (2021-05-04)
+
+
+### Features
+
+* **Dependencies:** Add back @nestjs/common to maintain compatibility with nestjs6.0. ([89bae79](https://github.com/benMain/nest-kinesis-producer/commit/89bae790d270bda5d3220d1d8bbf70b1fccc8462))
+
 # [2.3.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.2.1...v2.3.0) (2021-05-04)
 
 
