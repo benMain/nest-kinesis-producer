@@ -38,11 +38,13 @@
   },
   "peerDependencies": {
     "aws-sdk": "^2.686.0",
-    "@nestjs/common": "~7.1.1",
     "@nestjs/core": "~7.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.5"
+  },
+  "dependencies": {
+    "@nestjs/common": "~7.1.1"
   },
   "devDependencies": {
     "@nestjs/common": "~7.1.1",
