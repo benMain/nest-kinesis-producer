@@ -1,3 +1,11 @@
+# [2.5.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.4.0...v2.5.0) (2021-07-22)
+
+
+### Features
+
+* **Logging:** Fix linting for logging. ([adf02fa](https://github.com/benMain/nest-kinesis-producer/commit/adf02fa49ba0719a4796fe7cc78b5936d23fc1e2))
+* **Logging:** Victor added logging of performance. ([2cae820](https://github.com/benMain/nest-kinesis-producer/commit/2cae820fcb55b6e2483e93124fc69f23084eba3b))
+
 # [2.4.0](https://github.com/benMain/nest-kinesis-producer/compare/v2.3.0...v2.4.0) (2021-05-04)
 
 
