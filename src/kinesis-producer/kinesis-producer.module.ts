@@ -10,7 +10,9 @@ import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publishe
 @Global()
 @Module({})
 export class KinesisProducerModule {
-  static forRoot(kinesis: Kinesis, options: Partial<KinesisPublisherModuleOptions>): DynamicModule {
+  static forRoot(kinesis: Kinesis, options: Partial<KinesisPublisherModuleOptions> = { 
+    enableDebugLogs: true
+  }): DynamicModule {
     return {
       module: KinesisProducerModule,
       providers: [
