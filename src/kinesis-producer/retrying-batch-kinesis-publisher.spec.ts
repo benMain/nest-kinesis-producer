@@ -1,7 +1,9 @@
 import { AWSError, Kinesis, Request } from 'aws-sdk';
+import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { KinesisEvent } from './kinesis-event.interface';
+import { KinesisPublisherModuleOptions } from './module-config';
 import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
 import { TestSupport } from './test-support';
@@ -17,14 +19,18 @@ describe('RetryingBatchKinesisPublisher', () => {
       providers: [
         RetryingBatchKinesisPublisher,
         {
-          provide: Kinesis,
+          provide: KINESIS,
           useFactory: () => new Kinesis(),
+        },
+        {
+          provide: NEST_KINESIS_PUBLISHER_CONFIG,
+          useValue: new KinesisPublisherModuleOptions({ enableDebugLogs: true }),
         },
       ],
     }).compile();
 
     provider = module.get<RetryingBatchKinesisPublisher>(RetryingBatchKinesisPublisher);
-    kinesisService = module.get<Kinesis>(Kinesis);
+    kinesisService = module.get(KINESIS);
     putRecordsMock = jest.spyOn(kinesisService, 'putRecords');
     testSupport = new TestSupport();
   });
@@ -43,10 +49,8 @@ describe('RetryingBatchKinesisPublisher', () => {
   });
   it('putRecords(): should handle individual retryable record failures', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const retryableResponse: Request<
-      PutRecordsOutput,
-      AWSError
-    > = testSupport.generatePutRecordsRequestIndividualFailure();
+    const retryableResponse: Request<PutRecordsOutput, AWSError> =
+      testSupport.generatePutRecordsRequestIndividualFailure();
     const successfulResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementationOnce(() => retryableResponse);
     putRecordsMock.mockImplementationOnce(() => successfulResponse);

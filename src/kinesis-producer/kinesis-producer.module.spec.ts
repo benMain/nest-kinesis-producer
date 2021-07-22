@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Kinesis } from 'aws-sdk';
 import { KinesisProducerModule } from './kinesis-producer.module';
+import { KinesisPublisherModuleOptions } from './module-config';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
 
 describe('RetryingBatchKinesisPublisher', () => {
@@ -12,16 +13,21 @@ describe('RetryingBatchKinesisPublisher', () => {
   beforeEach(async () => {
     const asyncModule: TestingModule = await Test.createTestingModule({
       imports: [
-        KinesisProducerModule.forRootAsync({
-          useFactory: (cfg: ConfigService) => new Kinesis(),
-          inject: [ConfigService],
-          imports: [ConfigModule],
-        }),
+        KinesisProducerModule.forRootAsync(
+          {
+            useFactory: (cfg: ConfigService) => new Kinesis(),
+            inject: [ConfigService],
+            imports: [ConfigModule],
+          },
+          {
+            useValue: new KinesisPublisherModuleOptions({ enableDebugLogs: true }),
+          },
+        ),
       ],
     }).compile();
 
     const syncModule: TestingModule = await Test.createTestingModule({
-      imports: [KinesisProducerModule.forRoot(new Kinesis())],
+      imports: [KinesisProducerModule.forRoot(new Kinesis(), { enableDebugLogs: true })],
     }).compile();
 
     asyncProvider = asyncModule.get<RetryingBatchKinesisPublisher>(RetryingBatchKinesisPublisher);
