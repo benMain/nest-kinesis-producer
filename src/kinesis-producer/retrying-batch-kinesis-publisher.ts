@@ -1,7 +1,9 @@
 import { AWSError, Kinesis } from 'aws-sdk';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
+import { KinesisPublisherModuleOptions } from './module-config';
 import { PromiseResult } from 'aws-sdk/lib/request';
 import { PutRecordsInput } from 'aws-sdk/clients/kinesis';
 
@@ -14,8 +16,11 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     'ServiceUnavailable',
   ];
 
-  constructor(readonly kinesis: Kinesis) {
-    super(kinesis);
+  constructor(
+    @Inject(KINESIS) readonly kinesis: Kinesis,
+    @Inject(NEST_KINESIS_PUBLISHER_CONFIG) readonly options: KinesisPublisherModuleOptions,
+  ) {
+    super(kinesis, options);
     this.logger = new Logger(RetryingBatchKinesisPublisher.name);
   }
 
@@ -23,10 +28,11 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     if (this.entries.length < 1) {
       return;
     }
-    this.logger.log(`Attempting to flush ${this.entries.length} records!`);
+    // tslint:disable-next-line
+    this.options.enableDebugLogs || this.logger.debug(`Attempting to flush ${this.entries.length} records!`);
 
     const putRecordsInput: PutRecordsInput = {
-      StreamName: this.streamName,
+      StreamName: this.STREAM_NAME,
       Records: this.entries,
     };
     let result: PromiseResult<Kinesis.PutRecordsOutput, AWSError>;
@@ -55,7 +61,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     this.entries = [];
     if (retries.length > 0) {
       await this.sleep();
-      this.logger.warn(`There were ${retries.length} records requiring retry.`);
+      // tslint:disable-next-line
+      this.options.enableDebugLogs || this.logger.warn(`There were ${retries.length} records requiring retry.`);
       for (const x of retries) {
         await this.addEntry(x);
       }
