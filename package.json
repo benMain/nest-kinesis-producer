@@ -44,21 +44,21 @@
     "rxjs": "^6.5.5"
   },
   "dependencies": {
-    "@nestjs/common": "~7.1.1"
+    "@nestjs/common": "^7.5.1"
   },
   "devDependencies": {
-    "@nestjs/common": "~7.1.1",
+    "@nestjs/common": "^7.5.1",
     "@nestjs/config": "^0.6.3",
-    "@nestjs/core": "~7.1.1",
-    "@nestjs/testing": "~7.1.1",
+    "@nestjs/core": "^7.5.1",
+    "@nestjs/testing": "^7.5.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "26.0.0",
     "@types/node": "^14.0.5",
     "@types/supertest": "^2.0.9",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
-    "aws-sdk": "^2.686.0",
+    "aws-sdk": "^2.851.0",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-import": "^2.22.1",
