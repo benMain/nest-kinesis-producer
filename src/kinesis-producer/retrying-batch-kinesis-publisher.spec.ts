@@ -49,8 +49,10 @@ describe('RetryingBatchKinesisPublisher', () => {
   });
   it('putRecords(): should handle individual retryable record failures', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const retryableResponse: Request<PutRecordsOutput, AWSError> =
-      testSupport.generatePutRecordsRequestIndividualFailure();
+    const retryableResponse: Request<
+      PutRecordsOutput,
+      AWSError
+    > = testSupport.generatePutRecordsRequestIndividualFailure();
     const successfulResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementationOnce(() => retryableResponse);
     putRecordsMock.mockImplementationOnce(() => successfulResponse);
