@@ -105,11 +105,15 @@ export class AppService {
 ## VSCode debug testing
 
 Migrating husky v4 -> v7
+Option 1:
+`rm -rf .git/hooks/`
+`npm install`
+
+Option 2:
 https://github.com/typicode/husky/issues/854#issuecomment-776126582
 https://github.com/typicode/husky-4-to-7
 
-`launch.json
-
+`launch.json`
 ```json
 {
   // Use IntelliSense to learn about possible attributes.
@@ -135,6 +139,23 @@ https://github.com/typicode/husky-4-to-7
       ]
     }
   ]
+}
+```
+
+`settings.json`
+```json
+{
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+    },
+    "[javascript]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+    }
 }
 ```
 
