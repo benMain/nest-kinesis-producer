@@ -37,7 +37,7 @@
     "test:cov": "jest --coverage"
   },
   "peerDependencies": {
-    "@nestjs/common": "^7.x || 8.x",
+    "@nestjs/common": "7.x || 8.x",
     "@nestjs/core": "7.x || 8.x",
     "aws-sdk": "^2.1068.0",
     "reflect-metadata": "^0.1.13",
