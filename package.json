@@ -1,6 +1,6 @@
 {
-  "name": "nest-kinesis-producer",
-  "version": "3.0.0",
+  "name": "nest-kinesis-producer",  
+  "version": "2.5.4",
   "description": "Efficient Node Kinesis Producer Based on Kevin Deng's AWS Big Data Blog",
   "author": "Benjamin Main",
   "license": "MIT",
@@ -37,8 +37,8 @@
     "test:cov": "jest --coverage"
   },
   "peerDependencies": {
-    "@nestjs/common": "^7.0.0 || ^8.0.0",
-    "@nestjs/core": "^7.0.0 || ^8.0.0",
+    "@nestjs/common": "^7.x || 8.x",
+    "@nestjs/core": "7.x || 8.x",
     "aws-sdk": "^2.1068.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
