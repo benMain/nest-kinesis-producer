@@ -1,9 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # build artifacts
-/artifacts
-cfn/ods-datalake-api.zip
-cfn/ods-datalake-api-cfn-transform.yaml
+.husky
 
 # compiled output
 /dist

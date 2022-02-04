@@ -24,7 +24,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     this.logger = new Logger(RetryingBatchKinesisPublisher.name);
   }
 
-  protected async flush(): Promise<void> {
+  protected async flush(encoding: BufferEncoding): Promise<void> {
     if (this.entries.length < 1) {
       return;
     }
@@ -41,7 +41,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       result = await promise;
     } catch (err) {
       this.logger.error(`Caught exception in flush: ${err}`);
-      await this.handleException(err);
+      await this.handleException(err, encoding);
       return;
     }
     const intArray = Array.from(Array(result.Records.length).keys());
@@ -64,19 +64,19 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       // tslint:disable-next-line
       this.options.enableDebugLogs || this.logger.warn(`There were ${retries.length} records requiring retry.`);
       for (const x of retries) {
-        await this.addEntry(x);
+        await this.addEntry(x, encoding);
       }
-      await this.flush();
+      await this.flush(encoding);
     }
   }
 
-  private async handleException(ex: AWSError): Promise<void> {
+  private async handleException(ex: AWSError, encoding: BufferEncoding): Promise<void> {
     if (ex.statusCode / 100 === 4) {
       this.logger.error(`Unhandleable client error! ${ex.message}`);
       throw ex;
     }
     await this.sleep();
-    await this.flush();
+    await this.flush(encoding);
   }
 
   private sleep(): Promise<void> {

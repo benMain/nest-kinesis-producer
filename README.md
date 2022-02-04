@@ -74,10 +74,39 @@ export class AppService {
     ...
   }
 }
+```
 
+An example of sending JSON data, notice message not encoded prior to `putRecords()`
+```typescript
+import { hash } from 'crypto';
+import { RetryingBatchKinesisPublisher } from "nest-kinesis-producer";
+import { v4 as uuidv4 } from 'uuid';
+
+
+export class AppService {
+  constructor(private readonly kinesisPublisher: RetryingBatchKinesisPublisher){}
+
+  public async sendToKinesis(messages: any[]): Promise<void> {
+    const events = messages.map((x) => {
+      return {
+        PartitionKey: uuidv4(),
+        Data: JSON.stringify(data),
+      };
+    });
+    await this.kinesisPublisher.putRecords('fakeStreamName', events);
+  }
+
+  public getPartitionKey(mesage: string): string {
+    ...
+  }
+}
 ```
 
 ## VSCode debug testing
+
+Migrating husky v4 -> v7
+https://github.com/typicode/husky/issues/854#issuecomment-776126582
+https://github.com/typicode/husky-4-to-7
 
 `launch.json
 
