@@ -1,3 +1,5 @@
+## [2.5.5](https://github.com/benMain/nest-kinesis-producer/compare/v2.5.4...v2.5.5) (2022-06-07)
+
 ## [2.5.4](https://github.com/benMain/nest-kinesis-producer/compare/v2.5.3...v2.5.4) (2021-10-18)
 
 ## [2.5.3](https://github.com/benMain/nest-kinesis-producer/compare/v2.5.2...v2.5.3) (2021-10-07)
