@@ -36,7 +36,10 @@ export class KinesisProducerModule {
 
   static forRootAsync(
     kinesisProvider: AsyncProvider<Kinesis | Promise<Kinesis>>,
-    options: AsyncProvider<Partial<KinesisPublisherModuleOptions> | Promise<Partial<KinesisPublisherModuleOptions>>>,
+    options: AsyncProvider<
+      | Partial<KinesisPublisherModuleOptions>
+      | Promise<Partial<KinesisPublisherModuleOptions>>
+    >,
   ) {
     const module: DynamicModule = {
       global: true,
@@ -47,7 +50,9 @@ export class KinesisProducerModule {
         RetryingBatchKinesisPublisher,
         {
           provide: NEST_KINESIS_PUBLISHER_CONFIG,
-          useFactory: async (config: Partial<KinesisPublisherModuleOptions>) => {
+          useFactory: async (
+            config: Partial<KinesisPublisherModuleOptions>,
+          ) => {
             return new KinesisPublisherModuleOptions(config);
           },
           inject: [NEST_KINESIS_PUBLISHER_CONFIG],
@@ -56,7 +61,12 @@ export class KinesisProducerModule {
       exports: [RetryingBatchKinesisPublisher, NEST_KINESIS_PUBLISHER_CONFIG],
     };
     this.addAsyncProvider(module, KINESIS, kinesisProvider, false);
-    this.addAsyncProvider(module, NEST_KINESIS_PUBLISHER_CONFIG, options, false);
+    this.addAsyncProvider(
+      module,
+      NEST_KINESIS_PUBLISHER_CONFIG,
+      options,
+      false,
+    );
     return module;
   }
 
