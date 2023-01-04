@@ -23,7 +23,9 @@ describe('BatchKinesisPublisher', () => {
         },
         {
           provide: NEST_KINESIS_PUBLISHER_CONFIG,
-          useValue: new KinesisPublisherModuleOptions({ enableDebugLogs: true }),
+          useValue: new KinesisPublisherModuleOptions({
+            enableDebugLogs: true,
+          }),
         },
       ],
     }).compile();
@@ -38,7 +40,8 @@ describe('BatchKinesisPublisher', () => {
   });
   it('putRecords(): should put records', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const mockResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
+    const mockResponse: Request<PutRecordsOutput, AWSError> =
+      testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementation(() => mockResponse);
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(1);
@@ -49,7 +52,8 @@ describe('BatchKinesisPublisher', () => {
       Data: Buffer.from(JSON.stringify({ Ben: 'Is Awesome!' }), 'utf8') as any,
       PartitionKey: '1',
     };
-    const mockResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
+    const mockResponse: Request<PutRecordsOutput, AWSError> =
+      testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementation(() => mockResponse);
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(1);
@@ -59,13 +63,16 @@ describe('BatchKinesisPublisher', () => {
       Data: { Ben: 'Is Awesome!' } as any,
       PartitionKey: '1',
     };
-    const mockResponse: Request<PutRecordsOutput, AWSError> = testSupport.generatePutRecordsRequest(true);
+    const mockResponse: Request<PutRecordsOutput, AWSError> =
+      testSupport.generatePutRecordsRequest(true);
     putRecordsMock.mockImplementation(() => mockResponse);
     try {
       await provider.putRecords('fake', [record]);
     } catch (ex) {
       expect(putRecordsMock).toHaveBeenCalledTimes(0);
-      expect(ex.message).toEqual('Unable to transform event Data into buffer to send to kinesis.');
+      expect(ex.message).toEqual(
+        'Unable to transform event Data into buffer to send to kinesis.',
+      );
     }
   });
 });

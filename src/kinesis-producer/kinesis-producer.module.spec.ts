@@ -15,23 +15,31 @@ describe('RetryingBatchKinesisPublisher', () => {
       imports: [
         KinesisProducerModule.forRootAsync(
           {
-            useFactory: (cfg: ConfigService) => new Kinesis(),
+            useFactory: () => new Kinesis(),
             inject: [ConfigService],
             imports: [ConfigModule],
           },
           {
-            useValue: new KinesisPublisherModuleOptions({ enableDebugLogs: true }),
+            useValue: new KinesisPublisherModuleOptions({
+              enableDebugLogs: true,
+            }),
           },
         ),
       ],
     }).compile();
 
     const syncModule: TestingModule = await Test.createTestingModule({
-      imports: [KinesisProducerModule.forRoot(new Kinesis(), { enableDebugLogs: true })],
+      imports: [
+        KinesisProducerModule.forRoot(new Kinesis(), { enableDebugLogs: true }),
+      ],
     }).compile();
 
-    asyncProvider = asyncModule.get<RetryingBatchKinesisPublisher>(RetryingBatchKinesisPublisher);
-    syncProvider = syncModule.get<RetryingBatchKinesisPublisher>(RetryingBatchKinesisPublisher);
+    asyncProvider = asyncModule.get<RetryingBatchKinesisPublisher>(
+      RetryingBatchKinesisPublisher,
+    );
+    syncProvider = syncModule.get<RetryingBatchKinesisPublisher>(
+      RetryingBatchKinesisPublisher,
+    );
   });
 
   it('should setup the module correctly async', async () => {

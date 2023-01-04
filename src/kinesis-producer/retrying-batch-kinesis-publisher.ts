@@ -18,7 +18,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
 
   constructor(
     @Inject(KINESIS) readonly kinesis: Kinesis,
-    @Inject(NEST_KINESIS_PUBLISHER_CONFIG) readonly options: KinesisPublisherModuleOptions,
+    @Inject(NEST_KINESIS_PUBLISHER_CONFIG)
+    readonly options: KinesisPublisherModuleOptions,
   ) {
     super(kinesis, options);
     this.logger = new Logger(RetryingBatchKinesisPublisher.name);
@@ -29,7 +30,8 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       return;
     }
     // tslint:disable-next-line
-    this.options.enableDebugLogs || this.logger.debug(`Attempting to flush ${this.entries.length} records!`);
+    this.options.enableDebugLogs ||
+      this.logger.debug(`Attempting to flush ${this.entries.length} records!`);
 
     const putRecordsInput: PutRecordsInput = {
       StreamName: this.STREAM_NAME,
@@ -50,8 +52,17 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       const errorCode = result.Records[i].ErrorCode;
       // Determine whether the record should be retried
       if (!!errorCode)
-        this.logger.warn(`Kinesis ErrorCode: ${errorCode} ${JSON.stringify(result.Records[i].ErrorMessage)}`);
-      if (!!errorCode && RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some((x) => x === errorCode)) {
+        this.logger.warn(
+          `Kinesis ErrorCode: ${errorCode} ${JSON.stringify(
+            result.Records[i].ErrorMessage,
+          )}`,
+        );
+      if (
+        !!errorCode &&
+        RetryingBatchKinesisPublisher.RETRYABLE_ERR_CODES.some(
+          (x) => x === errorCode,
+        )
+      ) {
         return entry;
       } else {
         return null;
@@ -62,7 +73,10 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     if (retries.length > 0) {
       await this.sleep();
       // tslint:disable-next-line
-      this.options.enableDebugLogs || this.logger.warn(`There were ${retries.length} records requiring retry.`);
+      this.options.enableDebugLogs ||
+        this.logger.warn(
+          `There were ${retries.length} records requiring retry.`,
+        );
       for (const x of retries) {
         await this.addEntry(x);
       }
@@ -81,7 +95,9 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
 
   private sleep(): Promise<void> {
     const sleepTime = Math.floor(Math.random() * 2000);
-    this.logger.warn(`Managable client issue, sleeping for ${sleepTime / 1000} seconds`);
+    this.logger.warn(
+      `Managable client issue, sleeping for ${sleepTime / 1000} seconds`,
+    );
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
   }
 }

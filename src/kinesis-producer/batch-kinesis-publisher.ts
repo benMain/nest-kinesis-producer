@@ -1,6 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
-import { PutRecordsInput, PutRecordsRequestEntry } from 'aws-sdk/clients/kinesis';
+import {
+  PutRecordsInput,
+  PutRecordsRequestEntry,
+} from 'aws-sdk/clients/kinesis';
 
 import { Kinesis } from 'aws-sdk';
 import { KinesisEvent } from './kinesis-event.interface';
@@ -15,7 +18,8 @@ export class BatchKinesisPublisher {
   private dataSize = 0;
   constructor(
     @Inject(KINESIS) protected readonly kinesis: Kinesis,
-    @Inject(NEST_KINESIS_PUBLISHER_CONFIG) protected readonly options: KinesisPublisherModuleOptions,
+    @Inject(NEST_KINESIS_PUBLISHER_CONFIG)
+    protected readonly options: KinesisPublisherModuleOptions,
   ) {
     this.baseLogger = new Logger(BatchKinesisPublisher.name);
   }
@@ -30,7 +34,9 @@ export class BatchKinesisPublisher {
   async putRecords(streamName: string, events: KinesisEvent[]): Promise<void> {
     // tslint:disable-next-line
     this.options.enableDebugLogs ||
-      this.baseLogger.log(`putRecords() invoked for ${events.length} records on stream ${streamName}`);
+      this.baseLogger.log(
+        `putRecords() invoked for ${events.length} records on stream ${streamName}`,
+      );
     this.STREAM_NAME = streamName;
     for (const x of events) {
       await this.addEntry({
@@ -40,7 +46,10 @@ export class BatchKinesisPublisher {
     }
     await this.flush();
     // tslint:disable-next-line
-    this.options.enableDebugLogs || this.baseLogger.log(`putRecords() completed for ${events.length} records`);
+    this.options.enableDebugLogs ||
+      this.baseLogger.log(
+        `putRecords() completed for ${events.length} records`,
+      );
   }
   protected getDataBytes(data: string): Buffer {
     if (Buffer.isBuffer(data)) {
@@ -48,7 +57,9 @@ export class BatchKinesisPublisher {
     } else if (typeof data === 'string') {
       return Buffer.from(data, 'utf8');
     }
-    throw Error('Unable to transform event Data into buffer to send to kinesis.');
+    throw Error(
+      'Unable to transform event Data into buffer to send to kinesis.',
+    );
   }
 
   protected async flush(): Promise<void> {
@@ -64,10 +75,13 @@ export class BatchKinesisPublisher {
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
-    const entryDataSize: number = entry.Data.toString('utf8').length + entry.PartitionKey.length;
+    const entryDataSize: number =
+      entry.Data.toString('utf8').length + entry.PartitionKey.length;
     if (Number.isNaN(entryDataSize)) {
       this.baseLogger.error(
-        `Cannot produce data size of partitionKey: ${entry.PartitionKey}  |  Data: ${entry.Data.toString('utf8')}`,
+        `Cannot produce data size of partitionKey: ${
+          entry.PartitionKey
+        }  |  Data: ${entry.Data.toString('utf8')}`,
       );
       return;
     }
@@ -79,7 +93,10 @@ export class BatchKinesisPublisher {
     }
 
     const newDataSize = this.dataSize + entryDataSize;
-    if (newDataSize <= 5 * BatchKinesisPublisher.ONE_MEG && this.entries.length < 500) {
+    if (
+      newDataSize <= 5 * BatchKinesisPublisher.ONE_MEG &&
+      this.entries.length < 500
+    ) {
       this.dataSize = newDataSize;
       this.entries.push(entry);
     } else {
