@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Kinesis } from 'aws-sdk';
+import { Kinesis } from '@aws-sdk/client-kinesis';
 import { KinesisProducerModule } from './kinesis-producer.module';
 import { KinesisPublisherModuleOptions } from './module-config';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';

@@ -1,18 +1,26 @@
-import { AWSError, Kinesis, Request } from 'aws-sdk';
 import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
 import { KinesisEvent } from './kinesis-event.interface';
 import { KinesisPublisherModuleOptions } from './module-config';
-import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
+import {
+  Kinesis,
+  PutRecordsCommandInput,
+  PutRecordsCommandOutput,
+} from '@aws-sdk/client-kinesis';
 import { TestSupport } from './test-support';
 
 describe('BatchKinesisPublisher', () => {
   let provider: BatchKinesisPublisher;
   let kinesisService: Kinesis;
-  let putRecordsMock: jest.SpyInstance<Request<PutRecordsOutput, AWSError>>;
   let testSupport: TestSupport;
+  let putRecordsMock: jest.SpyInstance<
+    Promise<PutRecordsCommandOutput>,
+    [args: PutRecordsCommandInput, options: any],
+    any
+  >;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,7 +39,7 @@ describe('BatchKinesisPublisher', () => {
     }).compile();
     provider = module.get<BatchKinesisPublisher>(BatchKinesisPublisher);
     kinesisService = module.get(KINESIS);
-    putRecordsMock = jest.spyOn(kinesisService, 'putRecords');
+    putRecordsMock = jest.spyOn(kinesisService, 'putRecords') as any;
     testSupport = new TestSupport();
   });
 
@@ -40,9 +48,9 @@ describe('BatchKinesisPublisher', () => {
   });
   it('putRecords(): should put records', async () => {
     const record: KinesisEvent = testSupport.generateKinesisEvent();
-    const mockResponse: Request<PutRecordsOutput, AWSError> =
-      testSupport.generatePutRecordsRequest(true);
-    putRecordsMock.mockImplementation(() => mockResponse);
+    putRecordsMock.mockResolvedValue(
+      testSupport.generatePutRecordsCommandOutput(),
+    );
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(1);
   });
@@ -52,9 +60,9 @@ describe('BatchKinesisPublisher', () => {
       Data: Buffer.from(JSON.stringify({ Ben: 'Is Awesome!' }), 'utf8') as any,
       PartitionKey: '1',
     };
-    const mockResponse: Request<PutRecordsOutput, AWSError> =
-      testSupport.generatePutRecordsRequest(true);
-    putRecordsMock.mockImplementation(() => mockResponse);
+    putRecordsMock.mockResolvedValue(
+      testSupport.generatePutRecordsCommandOutput(),
+    );
     await provider.putRecords('fake', [record]);
     expect(putRecordsMock).toHaveBeenCalledTimes(1);
   });
@@ -63,9 +71,9 @@ describe('BatchKinesisPublisher', () => {
       Data: { Ben: 'Is Awesome!' } as any,
       PartitionKey: '1',
     };
-    const mockResponse: Request<PutRecordsOutput, AWSError> =
-      testSupport.generatePutRecordsRequest(true);
-    putRecordsMock.mockImplementation(() => mockResponse);
+    putRecordsMock.mockResolvedValue(
+      testSupport.generatePutRecordsCommandOutput(),
+    );
     try {
       await provider.putRecords('fake', [record]);
     } catch (ex) {
