@@ -1,8 +1,5 @@
-import { AWSError, Request } from 'aws-sdk';
-
 import { KinesisEvent } from './kinesis-event.interface';
-import { PromiseResult } from 'aws-sdk/lib/request';
-import { PutRecordsOutput } from 'aws-sdk/clients/kinesis';
+import { PutRecordsCommandOutput } from '@aws-sdk/client-kinesis';
 
 export class TestSupport {
   public generateKinesisEvent(): KinesisEvent {
@@ -12,55 +9,19 @@ export class TestSupport {
     };
   }
 
-  public generatePutRecordsRequest(
-    isGood: boolean,
-  ): Request<PutRecordsOutput, AWSError> {
+  public generatePutRecordsCommandOutput(): PutRecordsCommandOutput {
     return {
-      abort: null,
-      createReadStream: null,
-      eachPage: null,
-      isPageable: null,
-      send: null,
-      on: null,
-      onAsync: null,
-      startTime: null,
-      httpRequest: null,
-      promise: isGood ? goodPromise : failPromise,
+      Records: [{ ShardId: '1' }],
+      $metadata: {},
     };
   }
 
-  public generatePutRecordsRequestIndividualFailure(): Request<
-    PutRecordsOutput,
-    AWSError
-  > {
-    const request = this.generatePutRecordsRequest(true);
-    request.promise = retryablePromise;
-    return request;
-  }
-}
-
-const goodPromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
-    resolve({
-      Records: [{ ShardId: '1' }],
-      $response: null,
-    }),
-  );
-
-const failPromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve, reject) =>
-    reject({
-      statusCode: 500,
-      message: 'You Better Retry this server failure',
-    }),
-  );
-
-const retryablePromise = () =>
-  new Promise<PromiseResult<PutRecordsOutput, AWSError>>((resolve) =>
-    resolve({
+  public generateRetryableIndividualRecordFailure(): PutRecordsCommandOutput {
+    return {
       Records: [
         { ShardId: '1', ErrorCode: 'ProvisionedThroughputExceededException' },
       ],
-      $response: null,
-    }),
-  );
+      $metadata: {},
+    };
+  }
+}

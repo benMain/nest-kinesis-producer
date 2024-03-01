@@ -3,7 +3,7 @@ import { DynamicModule, Global, Module } from '@nestjs/common';
 import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
-import { Kinesis } from 'aws-sdk';
+import { Kinesis } from '@aws-sdk/client-kinesis';
 import { KinesisPublisherModuleOptions } from './module-config';
 import { RetryingBatchKinesisPublisher } from './retrying-batch-kinesis-publisher';
 

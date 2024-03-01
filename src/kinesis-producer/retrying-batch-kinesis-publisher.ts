@@ -1,11 +1,13 @@
-import { AWSError, Kinesis } from 'aws-sdk';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 
 import { BatchKinesisPublisher } from './batch-kinesis-publisher';
 import { KinesisPublisherModuleOptions } from './module-config';
-import { PromiseResult } from 'aws-sdk/lib/request';
-import { PutRecordsInput } from 'aws-sdk/clients/kinesis';
+import {
+  Kinesis,
+  PutRecordsCommandOutput,
+  PutRecordsInput,
+} from '@aws-sdk/client-kinesis';
 
 @Injectable()
 export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
@@ -37,10 +39,9 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
       StreamName: this.STREAM_NAME,
       Records: this.entries,
     };
-    let result: PromiseResult<Kinesis.PutRecordsOutput, AWSError>;
+    let result: PutRecordsCommandOutput;
     try {
-      const promise = this.kinesis.putRecords(putRecordsInput).promise();
-      result = await promise;
+      result = await this.kinesis.putRecords(putRecordsInput);
     } catch (err) {
       this.logger.error(`Caught exception in flush: ${err}`);
       await this.handleException(err);
@@ -84,7 +85,7 @@ export class RetryingBatchKinesisPublisher extends BatchKinesisPublisher {
     }
   }
 
-  private async handleException(ex: AWSError): Promise<void> {
+  private async handleException(ex: any): Promise<void> {
     if (ex.statusCode / 100 === 4) {
       this.logger.error(`Unhandleable client error! ${ex.message}`);
       throw ex;

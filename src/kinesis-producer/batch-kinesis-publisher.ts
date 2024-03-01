@@ -1,11 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { KINESIS, NEST_KINESIS_PUBLISHER_CONFIG } from './constants';
 import {
+  Kinesis,
   PutRecordsInput,
   PutRecordsRequestEntry,
-} from 'aws-sdk/clients/kinesis';
-
-import { Kinesis } from 'aws-sdk';
+} from '@aws-sdk/client-kinesis';
 import { KinesisEvent } from './kinesis-event.interface';
 import { KinesisPublisherModuleOptions } from './module-config';
 
@@ -70,18 +69,18 @@ export class BatchKinesisPublisher {
       StreamName: this.STREAM_NAME,
       Records: this.entries,
     };
-    await this.kinesis.putRecords(putRecordsInput).promise();
+    await this.kinesis.putRecords(putRecordsInput);
     this.entries = [];
   }
 
   protected async addEntry(entry: PutRecordsRequestEntry): Promise<void> {
     const entryDataSize: number =
-      entry.Data.toString('utf8').length + entry.PartitionKey.length;
+      entry.Data.toString().length + entry.PartitionKey.length;
     if (Number.isNaN(entryDataSize)) {
       this.baseLogger.error(
         `Cannot produce data size of partitionKey: ${
           entry.PartitionKey
-        }  |  Data: ${entry.Data.toString('utf8')}`,
+        }  |  Data: ${entry.Data.toString()}`,
       );
       return;
     }
