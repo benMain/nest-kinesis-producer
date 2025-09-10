@@ -1,3 +1,11 @@
+# [4.1.0](https://github.com/benMain/nest-kinesis-producer/compare/v4.0.0...v4.1.0) (2025-09-10)
+
+
+### Features
+
+* **versions:** Allow fastify versions 4 and 5. ([5b4fb85](https://github.com/benMain/nest-kinesis-producer/commit/5b4fb8513d84d5612ac5d2060643072a4f183c75))
+* **versions:** Allow fastify versions 4 and 5. ([6258c48](https://github.com/benMain/nest-kinesis-producer/commit/6258c4848ecb1cdac254933a2a39ab8a1e970f8d))
+
 # [4.0.0](https://github.com/benMain/nest-kinesis-producer/compare/v3.0.3...v4.0.0) (2024-03-01)
 
 ## [3.0.3](https://github.com/benMain/nest-kinesis-producer/compare/v3.0.2...v3.0.3) (2023-06-20)
